@@ -1,0 +1,74 @@
+﻿@model Movie
+@{
+    ViewBag.Title = "Create Movie";
+}
+<h2>@ViewData["Title"]</h2>
+
+<form class="container" method="post">
+    <div class="form-group my-2">
+        <label asp-for="Title"></label>
+        <input type="text" asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group my-2">
+        <label asp-for="RunTime"></label>
+        <input type="text" asp-for="RunTime" class="form-control" />
+        <span asp-validation-for="RunTime" class="text-danger"></span>
+    </div>
+    <div class="form-group my-2">
+        <label asp-for="Price"></label>
+        <input type="text" asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="form-group my-2">
+        <label asp-for="ReleaseDate" class="control-label"></label>
+        <input type="date" asp-for="ReleaseDate" class="form-control" />
+        <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+    </div>
+    <div class="form-group my-2">
+        <label asp-for="Overview"></label>
+        <input type="textarea" asp-for="Overview" class="form-control" rows="7"/>
+        <span asp-validation-for="Overview" class="text-danger"></span>
+    </div>
+    <div class="form-group my-2">
+        <label asp-for="ImdbUrl"></label>
+        <input type="text" asp-for="ImdbUrl" class="form-control" />
+        <span asp-validation-for="ImdbUrl" class="text-danger"></span>
+    </div>
+    <div class="form-group my-2">
+        <label asp-for="PosterUrl"></label>
+        <input type="text" asp-for="PosterUrl" class="form-control" />
+        <span asp-validation-for="PosterUrl" class="text-danger"></span>
+    </div>
+    <div class="form-group my-2">
+        <label asp-for="BackdropUrl"></label>
+        <input type="text" asp-for="BackdropUrl" class="form-control" />
+        <span asp-validation-for="BackdropUrl" class="text-danger"></span>
+    </div>
+    <div class="form-group my-2">
+        <label asp-for="TmdbUrl"></label>
+        <input type="text" asp-for="TmdbUrl" class="form-control" />
+        <span asp-validation-for="TmdbUrl" class="text-danger"></span>
+    </div>
+    <div class="form-group my-2">
+        <label asp-for="Budget"></label>
+        <input type="text" asp-for="Budget" class="form-control" />
+        <span asp-validation-for="Budget" class="text-danger"></span>
+    </div>
+    <div class="form-group my-2">
+        <label asp-for="OriginalLanguage"></label>
+        <input type="text" asp-for="OriginalLanguage" class="form-control" />
+        <span asp-validation-for="OriginalLanguage" class="text-danger"></span>
+    </div>
+    <div class="form-group my-2">
+        <label asp-for="Revenue"></label>
+        <input type="text" asp-for="Revenue" class="form-control" />
+        <span asp-validation-for="Revenue" class="text-danger"></span>
+    </div>
+    <div class="form-group my-2">
+        <label asp-for="Tagline"></label>
+        <input type="text" asp-for="Tagline" class="form-control" />
+        <span asp-validation-for="Tagline" class="text-danger"></span>
+    </div>
+    <input type="submit" value="Save" class="btn btn-primary" />
+</form>

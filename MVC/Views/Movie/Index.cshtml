@@ -1,18 +1,16 @@
-﻿@model IEnumerable<Movie> 
-<div>
-    <ul>
-        @foreach(var movie in Model)
+﻿@model MovieListViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="container">
+    <div class="row">
+        @foreach (var movieCard in Model.MovieCards)
         {
-            <li>@movie.Title</li>
+            <div class="col-lg-2 col-md-3 col-sm-4 col-6 justify-content-between my-3">
+                <partial name="_MovieCard" model="@movieCard" />
+            </div>
         }
-    </ul>
+    </div>
 </div>
 
-<nav aria-label="Page navigation example">
-    <ul class="pagination">
-        @for (int i = 1; i <= (int)@ViewData["PageCount"]; i++)
-        {
-            <li class="page-item"><a class="page-link" asp-action="Index" asp-controller="Movie" asp-route-pageNumber="@i">@i</a></li>
-        }
-    </ul>
-</nav>
+<partial name="_Pagination" model="@Model.Pagination" />
