@@ -7,7 +7,7 @@ namespace ApplicationCore.Entities
         public int MovieId { get; set; }
         public int UserId { get; set; }
         [Column(TypeName = "DATETIME2")]
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
         [Column(TypeName = "DECIMAL(3,2)")]
         public Decimal Rating { get; set; }
         [Column(TypeName = "NVARCHAR(MAX)")]

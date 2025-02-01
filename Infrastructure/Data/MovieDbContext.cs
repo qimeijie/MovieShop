@@ -66,7 +66,6 @@ namespace Infrastructure.Data
                 .WithMany(m => m.Reviews)
                 .HasForeignKey(f => f.MovieId);
 
-            modelBuilder.Entity<Purchase>().HasKey(p => new { p.MovieId, p.UserId });
             modelBuilder.Entity<Purchase>()
                 .HasOne(p => p.User)
                 .WithMany(u => u.Purchases)

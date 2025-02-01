@@ -23,6 +23,10 @@ namespace ApplicationCore.Entities
         public string? ProfilePictureUrl { get; set; }
         [Column(TypeName = "NVARCHAR(1024)")]
         public string Salt { get; set; } = string.Empty;
+        public bool? TwoFactorEnabled { get; set; }
+        public DateTime? LockoutEndDate { get; set; }
+        public DateTime? LastLoginDateTime { get; set; }
+        public int? AccessFailedCount { get; set; }
 
         //navigation prop
         public IEnumerable<Favorite> Favorites { get; set; } = new List<Favorite>();
