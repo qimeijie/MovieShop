@@ -4,13 +4,13 @@
         @if (Model.CurrentPage > 1)
         {
             <li class="page-item">
-                <a class="page-link" asp-controller="Movie" asp-action="Index" asp-route-currentpage="@(Model.CurrentPage - 1)">&lt;</a>
+                <a class="page-link" asp-controller="Movie" asp-action="Index" asp-route-currentpage="@(Model.CurrentPage - 1)" asp-route-genreId="@(Model.GenreId == null ? "" : Model.GenreId)">&lt;</a>
             </li>
         }
 
         <!-- First page -->
         <li class="page-item @(Model.CurrentPage == 1 ? "active" : "")">
-            <a class="page-link" asp-controller="Movie" asp-action="Index" asp-route-currentpage="1">1</a>
+            <a class="page-link" asp-controller="Movie" asp-action="Index" asp-route-currentpage="1" asp-route-genreId="@(Model.GenreId == null ? "" : Model.GenreId)">1</a>
         </li>
 
         <!-- Left ellipsis -->
@@ -23,7 +23,7 @@
         @for (int i = Math.Max(2, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages - 1, Model.CurrentPage + 2); i++)
         {
             <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                <a class="page-link" asp-controller="Movie" asp-action="Index" asp-route-currentpage="@i">@i</a>
+                <a class="page-link" asp-controller="Movie" asp-action="Index" asp-route-currentpage="@i" asp-route-genreId="@(Model.GenreId == null ? "" : Model.GenreId)">@i</a>
             </li>
         }
 
@@ -35,13 +35,13 @@
 
         <!-- Last page -->
         <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "active" : "")">
-            <a class="page-link" asp-controller="Movie" asp-action="Index" asp-route-currentpage="@Model.TotalPages">@Model.TotalPages</a>
+            <a class="page-link" asp-controller="Movie" asp-action="Index" asp-route-currentpage="@Model.TotalPages" asp-route-genreId="@(Model.GenreId == null ? "" : Model.GenreId)">@Model.TotalPages</a>
         </li>
 
         @if (Model.CurrentPage < Model.TotalPages)
         {
             <li class="page-item">
-                <a class="page-link" href="?page=@(Model.CurrentPage + 1)">&gt;</a>
+                <a class="page-link" asp-controller="Movie" asp-action="Index" asp-route-currentpage="@(Model.CurrentPage + 1)" asp-route-genreId="@(Model.GenreId == null ? "" : Model.GenreId)">&gt;</a>
             </li>
         }
     </ul>

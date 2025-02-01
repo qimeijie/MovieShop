@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<MovieDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("MovieDb")));
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-
+builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,4 +1,10 @@
-﻿﻿<header>
+﻿@{
+    IEnumerable<Genre> genres = Enumerable.Empty<Genre>();
+    if(ViewData.ContainsKey("Genres")){
+        genres = ViewData["Genres"] as IEnumerable<Genre> ?? Enumerable.Empty<Genre>();
+    }
+}﻿
+<header>
     <div class="row justify-content-between bg-black text-center">
         <div class="col-3">
             <div class="d-inline-flex">
@@ -6,7 +12,23 @@
                     <a class="nav-link text-light" asp-area="" asp-controller="Movie" asp-action="Index">MovieShop</a>
                 </div>
                 <div class="mx-2">
-                    <a class="nav-link text-light" href="#">Genres</a>
+                    @if (ViewContext.RouteData.Values["controller"]?.ToString() == "Movie" &&
+                    ViewContext.RouteData.Values["action"]?.ToString() == "Index")
+                    {
+                    
+                        <div class="dropdown">
+                            <button class="dropdown-toggle text-light bg-black border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Genres
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Movie" asp-action="Index">All Genres</a></li>
+                                @foreach (var genre in genres) 
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Movie" asp-action="Index" asp-route-genreId="@genre.Id">@genre.Name</a></li>
+                                }                      
+                            </ul>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

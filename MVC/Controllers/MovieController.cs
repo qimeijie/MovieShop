@@ -8,40 +8,37 @@ namespace MVC.Controllers
     public class MovieController : Controller
     {
         private IMovieRepository _movieRepository;
-       // private IGenreRepository _genreRepository;
-        //public MovieController(IMovieRepository movieRepository, IGenreRepository genreRepository)
-        //{
-        //    _movieRepository = movieRepository;
-        //    _genreRepository = genreRepository;
-        //}
-        public MovieController(IMovieRepository movieRepository)
+        private IGenreRepository _genreRepository;
+        public MovieController(IMovieRepository movieRepository, IGenreRepository genreRepository)
         {
             _movieRepository = movieRepository;
+            _genreRepository = genreRepository;
         }
         [HttpGet]
         public IActionResult Index(int currentPage = 1, int? genreId = null, int pageSize = 24)
         {
-            //var movieCount = 0;
-            //var movieCards = Enumerable.Empty<MovieCardViewModel>();
-            //if (genreId != null)
-            //{
-            //    var genre = _genreRepository.GetByIdWithMovie(genreId??0);
-            //    var movies = genre?.MovieGenres.Select(mv => mv.Movie);
-            //    movieCount = movies?.Count()??0;
-            //    movieCards = movies?
-            //        .Skip((currentPage - 1) * pageSize).Take(pageSize)
-            //        .Select(movie => new MovieCardViewModel()
-            //        {
-            //            Id = movie.Id,
-            //            Title = movie.Title ?? string.Empty,
-            //            Price = movie.Price ?? 0,
-            //            ImageUrl = movie.PosterUrl ?? string.Empty
-            //        })?? Enumerable.Empty<MovieCardViewModel>();
-            //}
-            //else 
-            //{
-                var movieCount = _movieRepository.GetAll().Count();
-                var movieCards = _movieRepository.GetAll()
+            var movieCount = 0;
+            var movieCards = Enumerable.Empty<MovieCardViewModel>();
+            var genres = _genreRepository.GetAll();
+            if (genreId != null)
+            {
+                var genre = _genreRepository.GetByIdWithMovie(genreId ?? 0);
+                var movies = genre?.MovieGenres.Select(mv => mv.Movie);
+                movieCount = movies?.Count() ?? 0;
+                movieCards = movies?
+                    .Skip((currentPage - 1) * pageSize).Take(pageSize)
+                    .Select(movie => new MovieCardViewModel()
+                    {
+                        Id = movie.Id,
+                        Title = movie.Title ?? string.Empty,
+                        Price = movie.Price ?? 0,
+                        ImageUrl = movie.PosterUrl ?? string.Empty
+                    }) ?? Enumerable.Empty<MovieCardViewModel>();
+            }
+            else
+            {
+                movieCount = _movieRepository.GetAll().Count();
+                movieCards = _movieRepository.GetAll()
                     .Skip((currentPage - 1) * pageSize).Take(pageSize)
                     .Select(movie => new MovieCardViewModel()
                     {
@@ -50,10 +47,11 @@ namespace MVC.Controllers
                         Price = movie.Price ?? 0,
                         ImageUrl = movie.PosterUrl ?? string.Empty
                     });
-           // }
+            }
             
             var paginationViewModel = new PaginationViewModel()
             {
+                GenreId = genreId,
                 CurrentPage = currentPage,
                 TotalPages = (int)Math.Ceiling((double)movieCount / pageSize),
             };
@@ -62,6 +60,7 @@ namespace MVC.Controllers
                 Pagination = paginationViewModel,
                 MovieCards = movieCards,
             };
+            ViewData["Genres"] = genres;
             return View(movieList);
         }
 
