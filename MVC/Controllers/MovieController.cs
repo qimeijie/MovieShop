@@ -27,36 +27,16 @@ namespace MVC.Controllers
                     Price = movie.Price ?? 0,
                     ImageUrl = movie.PosterUrl ?? string.Empty
                 });
-            
-            var paginationViewModel = new PaginationViewModel()
+            var movieList = new MovieListViewModel()
             {
                 GenreId = genreId,
                 CurrentPage = currentPage,
+                PageSize = pageSize,
                 TotalPages = (int)Math.Ceiling((double)totalMovies / pageSize),
-            };
-            var movieList = new MovieListViewModel()
-            {
-                Pagination = paginationViewModel,
                 MovieCards = movieCards,
             };
             ViewData["Genres"] = genres;
             return View(movieList);
-        }
-
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult Create(Movie movie)
-        {
-            if (ModelState.IsValid)
-            {
-                _movieRepository.Insert(movie);
-                return RedirectToAction("Index");
-            }
-            return View(movie);
         }
         [HttpGet]
         public IActionResult Detail(int movieId) { 

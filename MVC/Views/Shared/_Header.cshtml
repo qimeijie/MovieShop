@@ -36,12 +36,22 @@
                         Admin
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" asp-controller="Movie" asp-action="Create">CreateMovie</a></li>
-                        <li><a class="dropdown-item" href="#">TopMovie</a></li>
+                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="CreateMovie">CreateMovie</a></li>
+                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="TopMovies">TopMovie</a></li>
                     </ul>
                 </div>
                 <div class="mx-2">
-                    <a class="nav-link text-light" href="#">UserName</a>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle text-light bg-black border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Lawson Klocko
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" asp-controller="User" asp-action="Movies">Movies</a></li>
+                            <li><a class="dropdown-item" asp-controller="User" asp-action="Favorites">Favorites</a></li>
+                            <li><a class="dropdown-item" asp-controller="User" asp-action="Account">Account</a></li>
+                            <li><a class="dropdown-item" asp-controller="User" asp-action="Logout">Logout</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
