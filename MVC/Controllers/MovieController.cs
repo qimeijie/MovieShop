@@ -17,43 +17,22 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult Index(int currentPage = 1, int? genreId = null, int pageSize = 24)
         {
-            var movieCount = 0;
-            var movieCards = Enumerable.Empty<MovieCardViewModel>();
-            var genres = _genreRepository.GetAll();
-            if (genreId != null)
-            {
-                var genre = _genreRepository.GetByIdWithMovie(genreId ?? 0);
-                var movies = genre?.MovieGenres.Select(mv => mv.Movie);
-                movieCount = movies?.Count() ?? 0;
-                movieCards = movies?
-                    .Skip((currentPage - 1) * pageSize).Take(pageSize)
-                    .Select(movie => new MovieCardViewModel()
-                    {
-                        Id = movie.Id,
-                        Title = movie.Title ?? string.Empty,
-                        Price = movie.Price ?? 0,
-                        ImageUrl = movie.PosterUrl ?? string.Empty
-                    }) ?? Enumerable.Empty<MovieCardViewModel>();
-            }
-            else
-            {
-                movieCount = _movieRepository.GetAll().Count();
-                movieCards = _movieRepository.GetAll()
-                    .Skip((currentPage - 1) * pageSize).Take(pageSize)
-                    .Select(movie => new MovieCardViewModel()
-                    {
-                        Id = movie.Id,
-                        Title = movie.Title ?? string.Empty,
-                        Price = movie.Price ?? 0,
-                        ImageUrl = movie.PosterUrl ?? string.Empty
-                    });
-            }
+            var movies = _movieRepository.GetMovies(currentPage, pageSize, genreId);
+            var totalMovies = _movieRepository.GetTotalMoviesCount(genreId);
+            var genres = _genreRepository.GetAll().ToList();
+            var movieCards = movies.Select(movie => new MovieCardViewModel()
+                {
+                    Id = movie.Id,
+                    Title = movie.Title ?? string.Empty,
+                    Price = movie.Price ?? 0,
+                    ImageUrl = movie.PosterUrl ?? string.Empty
+                });
             
             var paginationViewModel = new PaginationViewModel()
             {
                 GenreId = genreId,
                 CurrentPage = currentPage,
-                TotalPages = (int)Math.Ceiling((double)movieCount / pageSize),
+                TotalPages = (int)Math.Ceiling((double)totalMovies / pageSize),
             };
             var movieList = new MovieListViewModel()
             {

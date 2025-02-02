@@ -1,8 +1,5 @@
 ﻿@{
-    IEnumerable<Genre> genres = Enumerable.Empty<Genre>();
-    if(ViewData.ContainsKey("Genres")){
-        genres = ViewData["Genres"] as IEnumerable<Genre> ?? Enumerable.Empty<Genre>();
-    }
+    var genres = ViewData["Genres"] as List<Genre> ?? new List<Genre>();
 }﻿
 <header>
     <div class="row justify-content-between bg-black text-center">
