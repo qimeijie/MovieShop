@@ -1,6 +1,6 @@
 ﻿namespace ApplicationCore.Models
 {
-    public class MoviePurchaseModel
+    public class MoviePurchaseCountModel
     {
         public int MovieId { get; set; }
         public string MovieTitle { get; set; } = string.Empty;

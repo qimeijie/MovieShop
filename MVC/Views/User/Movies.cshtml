@@ -1,4 +1,4 @@
-﻿@model MovieListViewModel
+﻿@model PurchasedMovieListViewModel
 @{
     ViewData["Title"] = "Movies";
 }
@@ -15,13 +15,12 @@
                     <div class="col-2 p-1"><img id="image" style="width:100%" src="" alt="Movie Image" /></div>
                     <div class="col-10 p-1">
                         <ul class="list-unstyled p-2">
-                            <li class="border-bottom pb-2 mb-2">Purchased Date <span id="date" class="bg-black text-white rounded-2"></span></li>
-                            <li class="border-bottom pb-2 mb-2">Price $<span id="price" class="bg-black text-white rounded-2"></span></li>
-                            <li class="border-bottom pb-2 mb-2">Purhcase Number $<span id="id" class="bg-black text-white rounded-2"></span></li>
+                            <li class="border-bottom pb-2 mb-2">Purchased Date <span id="date" class="bg-black text-white rounded-2 p-1"></span></li>
+                            <li class="border-bottom pb-2 mb-2">Price $<span id="price" class="bg-black text-white rounded-2 p-1"></span></li>
+                            <li class="border-bottom pb-2 mb-2">Purhcase Number $<span id="id" class="bg-black text-white rounded-2 p-1"></span></li>
                         </ul>
                     </div>
-                </div>
-                
+                </div>  
             </div>
         </div>
     </div>
@@ -35,11 +34,11 @@
             <div class="col-lg-2 col-md-3 col-sm-4 col-6 justify-content-between my-3">
                 <div class="card">
                     <a href="#" data-bs-toggle="modal" data-bs-target="#detail"
-                       data-image="@movieCard.ImageUrl"
-                       data-date="@movieCard.PurchasedDate?.ToString("MMM d, yyyy")"
-                       data-price="@movieCard.PurchasedPrice"
-                       data-id="@movieCard.PurchaseId">
-                        <img src="@movieCard.ImageUrl" class="card-img-top" alt="Movie Image">
+                       data-image="@movieCard.PosterUrl"
+                       data-date="@movieCard.PurchaseDate?.ToString("MMM d, yyyy")"
+                       data-price="@movieCard.TotalPrice"
+                       data-id="@movieCard.PurchaseNumber">
+                        <img src="@movieCard.PosterUrl" class="card-img-top" alt="Movie Image">
                     </a>
                 </div>
             </div>

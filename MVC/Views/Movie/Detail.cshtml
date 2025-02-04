@@ -9,8 +9,8 @@
         </div>
         <div class="col-4 offset-1">
             <h3 class="text-white mt-3 mb-3">@Model.Movie.Title</h3>
-            <div class="mt-1 mb-1" style="font-size:small; color: lightgray">@Model.Movie.Tagline</div>
-            <div class="mt-1 mb-1" style="font-size:small; color: lightgray">@Model.Movie.RunTime m</div>
+            <div class="mt-1 mb-1" style="font-size:small; color: lightgray">@Model.Movie.TagLine</div>
+            <div class="mt-1 mb-1" style="font-size:small; color: lightgray">@Model.Movie.Runtime m</div>
             <div class="d-inline-block text-white text-bg-success rounded mt-1 mb-1">&nbsp;&nbsp;8.9&nbsp;&nbsp;</div>
             <div class="text-white mt-1 mb-3">@Model.Movie.Overview</div>
         </div>
@@ -40,12 +40,12 @@
             <div class="border-bottom border-light pb-2">MOVIE FACTS</div>
             <ul class="list-unstyled p-2">
                 <li class="border-bottom pb-2 mb-2">Release Date <span class="bg-black text-white">@Model.Movie.ReleaseDate?.ToString("MMM d, yyyy")</span></li>
-                <li class="border-bottom pb-2 mb-2">Run Time <span class="bg-black text-white">@Model.Movie.RunTime</span> m</li>
-                <li class="border-bottom pb-2 mb-2">Box Office $<span class="bg-black text-white">@Model.Movie.Revenue</span></li>
+                <li class="border-bottom pb-2 mb-2">Run Time <span class="bg-black text-white">@Model.Movie.Runtime</span> m</li>
+                <li class="border-bottom pb-2 mb-2">Box Office $<span class="bg-black text-white">@Model.Movie.BoxOffice</span></li>
                 <li class="border-bottom pb-2 mb-2">Budget $<span class="bg-black text-white">@Model.Movie.Budget</span></li>
             </ul>
             <div class="border-bottom border-light pb-2">TRAILERS</div>
-            @foreach (var trailer in Model.Movie.Trailers)
+            @foreach (var trailer in Model.Trailers)
             {
                 <a class="text-decoration-none text-black" href="@trailer.TrailerUrl">
                 <div class="border-bottom pb-2 mb-2">
@@ -61,9 +61,9 @@
                 @foreach (var cast in Model.Casts) 
                 {
                     <div class="row border-bottom border-light p-2">
-                        <div class="col-2"><img class="rounded-circle" src="@cast.ProfileUrl" width="25" /></div>
-                        <div class="col-5">@cast.Actor</div>
-                        <div class="col-5">@cast.Character</div>
+                        <div class="col-2"><img class="rounded-circle" src="@cast.ProfilePath" width="25" /></div>
+                        <div class="col-5">@cast.ActorName</div>
+                        <div class="col-5">@cast.CharacterName</div>
                     </div>
                 }
         </div>

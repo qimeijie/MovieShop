@@ -6,36 +6,24 @@ namespace MVC.Controllers
 {
     public class UserController : Controller
     {
-        private IMovieRepository _movieRepository;
-        public UserController(IMovieRepository movieRepository)
+        private readonly IPurchaseRepository _purchaseRepository;
+
+        public UserController(IPurchaseRepository purchaseRepository)
         {
-            _movieRepository = movieRepository;
+            _purchaseRepository = purchaseRepository;
         }
         private int testUserId = 48994; // 29 purhcases
         [HttpGet]
         public IActionResult Movies(int currentPage = 1, int pageSize = 24)
         {
-            var totalMovies = _movieRepository.GetMoviesCountPurchasedByUser(testUserId);
-            var movies = _movieRepository.GetMoviesPurchasedByUser(testUserId, currentPage, pageSize);
-            var movieCards = movies.Select(m =>
-            {
-                var purchase = m.Purchases.FirstOrDefault(p => p.UserId == testUserId);
-                return new MovieCardViewModel()
-                {
-                    Id = m.Id,
-                    Title = m.Title,
-                    ImageUrl = m.PosterUrl,
-                    PurchaseId = purchase?.PurchaseNumber,
-                    PurchasedDate = purchase?.PurchaseDateTime,
-                    PurchasedPrice = purchase?.TotalPrice
-                };
-            });
-            var model = new MovieListViewModel()
+            var totalMovies = _purchaseRepository.GetTotalMoviesCount(null, null, testUserId);
+            var movies = _purchaseRepository.GetMoviesPurchasedByUser(testUserId, currentPage, pageSize);
+            var model = new PurchasedMovieListViewModel()
             {
                 CurrentPage = currentPage,
                 PageSize = pageSize,
                 TotalPages = (int)Math.Ceiling((double)totalMovies / pageSize),
-                MovieCards = movieCards,
+                MovieCards = movies,
             };
             return View(model);
         }
@@ -46,6 +34,14 @@ namespace MVC.Controllers
         }
         [HttpGet]
         public IActionResult Account()
+        {
+            return View();
+        }
+        public IActionResult Login()
+        {
+            return View();
+        }
+        public IActionResult Register()
         {
             return View();
         }

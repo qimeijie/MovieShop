@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.Contracts.Repositories;
-using ApplicationCore.Entities;
 using Microsoft.AspNetCore.Mvc;
 using MVC.ViewModels;
 
@@ -21,12 +20,10 @@ namespace MVC.Controllers
             var totalMovies = _movieRepository.GetTotalMoviesCount(genreId);
             var genres = _genreRepository.GetAll().ToList();
             var movieCards = movies.Select(movie => new MovieCardViewModel()
-                {
-                    Id = movie.Id,
-                    Title = movie.Title ?? string.Empty,
-                    Price = movie.Price ?? 0,
-                    ImageUrl = movie.PosterUrl ?? string.Empty
-                });
+            {
+                Id = movie.Id,
+                ImageUrl = movie.PosterUrl ?? string.Empty
+             });
             var movieList = new MovieListViewModel()
             {
                 GenreId = genreId,
@@ -40,19 +37,15 @@ namespace MVC.Controllers
         }
         [HttpGet]
         public IActionResult Detail(int movieId) { 
-            var movie = _movieRepository.GetByIdWithCastTrailer(movieId)??new Movie();
-            var castInfos = movie.MovieCasts.Select(
-                mc => new CastInfo() 
-                {
-                    Character = mc.Character,
-                    ProfileUrl = mc.Cast.ProfilePath,
-                    Actor = mc.Cast.Name
-                });
+            var movie = _movieRepository.GetMovieDetails(movieId);
+            var casts = _movieRepository.GetMoviesCast(movieId);
+            var trailer = _movieRepository.GetMovieTrailers(movieId);
             var model = new MovieDetailViewModel()
             {
                 IsPurchased = false,
-                Movie = movie??new Movie(),
-                Casts = castInfos,
+                Movie = movie,
+                Casts = casts,
+                Trailers = trailer
             };
             return View(model);
         }

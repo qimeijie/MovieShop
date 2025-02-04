@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.Contracts.Repositories;
 using ApplicationCore.Entities;
-using Azure;
+using ApplicationCore.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,18 +14,9 @@ namespace Infrastructure.Repositories
             _movieDbContext = movieDbContext;
         }
 
-        public Movie? GetByIdWithCastTrailer(int id)
-        {
-            return _movieDbContext.Set<Movie>()
-                .Include(m => m.MovieCasts)
-                .ThenInclude(mc => mc.Cast)
-                .Include(m => m.Trailers)
-                .FirstOrDefault(m => m.Id == id);
-        }
-
         public IEnumerable<Movie> GetMovies(int page, int pageSize, int? genreId = null)
         {
-            var query = _movieDbContext.Set<Movie>().AsQueryable();
+            var query = _movieDbContext.Movies.AsNoTracking().AsQueryable();
 
             if (genreId != null)
             {
@@ -34,44 +25,71 @@ namespace Infrastructure.Repositories
 
             return query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
         }
-        public int GetTotalMoviesCount(int? genreId = null)
+
+        public int GetTotalMoviesCount(int? genreId = null, DateTime ? purchaseStart = null, DateTime? purchaseEnd = null)
         {
-            var query = _movieDbContext.Set<Movie>().AsQueryable();
+            var query = _movieDbContext.Movies.AsNoTracking().AsQueryable();
 
             if (genreId != null)
             {
                 query = query.Where(m => m.MovieGenres.Any(mg => mg.GenreId == genreId));
             }
-
-            return query.Count();
-        }
-        private IQueryable<Movie> GetMovies(DateTime? purchaseStart, DateTime? purchaseEnd)
-        {
-            return _movieDbContext.Set<Movie>()
-                .Include(m => m.Purchases)
-                .Where(m => m.Purchases.Any(p => purchaseStart == null || purchaseStart < p.PurchaseDateTime))
-                .Where(m => m.Purchases.Any(p => purchaseEnd == null || purchaseEnd > p.PurchaseDateTime));
-        }
-
-        public int GetTotalMoviesCount(DateTime? purchaseStart, DateTime? purchaseEnd)
-        {
-            return GetMovies(purchaseStart, purchaseEnd).Count();
+            if(purchaseStart != null)
+            {
+                query = query.Where(m => m.Purchases.Any(p => purchaseStart == null || purchaseStart < p.PurchaseDateTime));
+            }
+            if(purchaseEnd != null)
+            {
+                query = query.Where(m => m.Purchases.Any(p => purchaseEnd == null || purchaseEnd > p.PurchaseDateTime));
+            }
+            return query.ToList().Count;
         }
 
-        public IEnumerable<Movie> GetMoviesPurchasedByUser(int userId, int page, int pageSize)
+        public MovieDetailModel? GetMovieDetails(int movieId)
         {
-            return _movieDbContext.Set<Movie>()
-                .Include(m => m.Purchases)
-                .Where(m => m.Purchases.Any(p => p.UserId == userId))
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();  
+            return _movieDbContext.Movies.AsNoTracking()
+                .Where(m => m.Id == movieId)
+                .Select(m => new MovieDetailModel
+                {
+                    Id = m.Id,
+                    Title = m.Title,
+                    TagLine = m.Tagline,
+                    ReleaseDate = m.ReleaseDate,
+                    Overview = m.Overview,
+                    Price = m.Price,
+                    PosterUrl = m.PosterUrl,
+                    BackdropUrl = m.BackdropUrl,
+                    Runtime = m.RunTime,
+                    BoxOffice = m.Revenue,
+                    Budget = m.Budget,
+                })
+                .FirstOrDefault();
         }
-        public int GetMoviesCountPurchasedByUser(int userId)
+
+        public IEnumerable<MovieTrailerModel> GetMovieTrailers(int movieId)
         {
-            return _movieDbContext.Set<Movie>()
-                .Include(m => m.Purchases)
-                .Where(m => m.Purchases.Any(p => p.UserId == userId)).Count();
+            return _movieDbContext.Trailers.AsNoTracking()
+                .Where(t => t.MovieId == movieId)
+                .Select(t => new MovieTrailerModel
+                {
+                    Name = t.Name,
+                    TrailerUrl = t.TrailerUrl
+                })
+                .ToList();
+        }
+
+        public IEnumerable<MovieCastModel> GetMoviesCast(int movieId)
+        {
+            return _movieDbContext.MovieCasts.AsNoTracking()
+                .Where(mc => mc.MovieId == movieId)
+                .Select(mc => new MovieCastModel
+                {
+                    ActorName = mc.Cast.Name,
+                    CharacterName = mc.Character,
+                    ProfilePath = mc.Cast.ProfilePath,
+                    TmdbUrl = mc.Cast.TmdbUrl
+                })
+                .ToList();
         }
     }
 }

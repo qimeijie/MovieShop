@@ -1,14 +1,14 @@
 ﻿using ApplicationCore.Entities;
+using ApplicationCore.Models;
 
 namespace ApplicationCore.Contracts.Repositories
 {
     public interface IMovieRepository : IRepository<Movie>
     {
         IEnumerable<Movie> GetMovies(int page, int pageSize, int? genreId = null);
-        int GetTotalMoviesCount(int? genreId = null);
-        Movie? GetByIdWithCastTrailer(int id);
-        int GetTotalMoviesCount(DateTime? purchaseStart, DateTime? purchaseEnd);
-        IEnumerable<Movie> GetMoviesPurchasedByUser(int userId, int page, int pageSize);
-        int GetMoviesCountPurchasedByUser(int userId);
+        int GetTotalMoviesCount(int? genreId = null, DateTime? purchaseStart = null, DateTime? purchaseEnd = null);
+        MovieDetailModel? GetMovieDetails(int movieId);
+        IEnumerable<MovieTrailerModel> GetMovieTrailers(int movieId);
+        IEnumerable<MovieCastModel> GetMoviesCast(int movieId);
     }
 }

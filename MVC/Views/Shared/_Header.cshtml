@@ -2,9 +2,17 @@
     var genres = ViewData["Genres"] as List<Genre> ?? new List<Genre>();
 }﻿
 <header>
-    <div class="row justify-content-between bg-black text-center">
-        <div class="col-3">
-            <div class="d-inline-flex">
+    <style>
+        .dropdown-toggle::after {
+            content: none !important; 
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+    </style>
+    <div class="row justify-content-between bg-black">
+        <div class="col-3 mx-2">
+            <div class="d-flex">
                 <div class="mx-2">
                     <a class="nav-link text-light" asp-area="" asp-controller="Movie" asp-action="Index">MovieShop</a>
                 </div>
@@ -12,7 +20,6 @@
                     @if (ViewContext.RouteData.Values["controller"]?.ToString() == "Movie" &&
                     ViewContext.RouteData.Values["action"]?.ToString() == "Index")
                     {
-                    
                         <div class="dropdown">
                             <button class="dropdown-toggle text-light bg-black border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Genres
@@ -30,7 +37,7 @@
             </div>
         </div>
         <div class="col-3">
-            <div class="d-inline-flex">
+            <div class="d-flex">
                 <div class="dropdown">
                     <button class="dropdown-toggle text-light bg-black border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Admin

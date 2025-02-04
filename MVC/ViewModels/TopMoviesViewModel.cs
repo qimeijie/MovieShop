@@ -9,6 +9,6 @@ namespace MVC.ViewModels
         public int TotalPages { get; set; }
         public DateTime? StartDate { get; set; } 
         public DateTime? EndDate { get; set; }
-        public IEnumerable<MoviePurchaseModel> Movies { get; set; } = Enumerable.Empty<MoviePurchaseModel>();
+        public IEnumerable<MoviePurchaseCountModel> Movies { get; set; } = Enumerable.Empty<MoviePurchaseCountModel>();
     }
 }

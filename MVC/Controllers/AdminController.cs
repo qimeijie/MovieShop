@@ -31,7 +31,7 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult TopMovies(int currentPage = 1, int pageSize = 30, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var movies = _purchaseRepository.GetMoviesOrderedByPurchaseCount(startDate, endDate, currentPage, pageSize);
+            var movies = _purchaseRepository.GetMoviesOrderedByPurchaseCount(currentPage, pageSize, startDate, endDate);
             var totalCount = _purchaseRepository.GetTotalMoviesCount(startDate, endDate);
             var model = new TopMoviesViewModel()
             {
