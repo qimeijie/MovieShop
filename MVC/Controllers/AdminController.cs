@@ -1,5 +1,7 @@
 ﻿using ApplicationCore.Contracts.Repositories;
+using ApplicationCore.Dtos;
 using ApplicationCore.Entities;
+using ApplicationCore.Models;
 using Microsoft.AspNetCore.Mvc;
 using MVC.ViewModels;
 
@@ -7,11 +9,11 @@ namespace MVC.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly IMovieRepository _movieRepository;
-        private readonly IPurchaseRepository _purchaseRepository;
-        public AdminController(IMovieRepository movieRepository, IPurchaseRepository purchaseRepository) {
-            _movieRepository = movieRepository;
-            _purchaseRepository = purchaseRepository;
+        private readonly IMovieRepositoryAsync movieRepository;
+        private readonly IPurchaseRepositoryAsync purchaseRepository;
+        public AdminController(IMovieRepositoryAsync movieRepository, IPurchaseRepositoryAsync purchaseRepository) {
+            this.movieRepository = movieRepository;
+            this.purchaseRepository = purchaseRepository;
         }
         [HttpGet]
         public IActionResult CreateMovie()
@@ -23,24 +25,29 @@ namespace MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _movieRepository.Insert(movie);
+                movieRepository.InsertAsync(movie);
                 return RedirectToAction("Index");
             }
             return View(movie);
         }
         [HttpGet]
-        public IActionResult TopMovies(int currentPage = 1, int pageSize = 30, DateTime? startDate = null, DateTime? endDate = null)
+        public async Task<IActionResult> TopMovies(int currentPage = 1, int pageSize = 30, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var movies = _purchaseRepository.GetMoviesOrderedByPurchaseCount(currentPage, pageSize, startDate, endDate);
-            var totalCount = _purchaseRepository.GetTotalMoviesCount(startDate, endDate);
-            var model = new TopMoviesViewModel()
+            var movies = await purchaseRepository.GetMoviesOrderedByPurchaseCountAsync(currentPage, pageSize, startDate, endDate);
+            var totalCount = await purchaseRepository.GetTotalMoviesCountAsync(startDate, endDate);
+            var paginatedResultSet = new PaginatedResultSet<MoviePurchaseCountDto>()
             {
                 CurrentPage = currentPage,
                 PageSize = pageSize,
                 TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
+                Movies = movies,
+            };
+            var model = new TopMoviesViewModel()
+            {
+                PaginatedResultSet = paginatedResultSet,
                 StartDate = startDate,
                 EndDate = endDate,
-                Movies = movies,
+                
             };
             return View(model);
         }

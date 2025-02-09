@@ -1,18 +1,18 @@
 ﻿using ApplicationCore.Contracts.Repositories;
-using ApplicationCore.Models;
+using ApplicationCore.Dtos;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public class PurchaseRepository : IPurchaseRepository
+    public class PurchaseRepositoryAsync : IPurchaseRepositoryAsync
     {
         private readonly MovieDbContext _movieDbContext;
-        public PurchaseRepository(MovieDbContext movieDbContext) 
+        public PurchaseRepositoryAsync(MovieDbContext movieDbContext) 
         {
             _movieDbContext = movieDbContext;
         }
-        public IEnumerable<MoviePurchaseCountModel> GetMoviesOrderedByPurchaseCount(int page, int pageSize, DateTime? purchaseStart = null, DateTime? purchaseEnd = null)
+        public async Task<IEnumerable<MoviePurchaseCountDto>> GetMoviesOrderedByPurchaseCountAsync(int page, int pageSize, DateTime? purchaseStart = null, DateTime? purchaseEnd = null)
         {
             var query = _movieDbContext.Purchases.AsNoTracking().AsQueryable();
 
@@ -25,7 +25,7 @@ namespace Infrastructure.Repositories
                 query = query.Where(p => p.PurchaseDateTime <= purchaseEnd.Value);
             }
 
-            var purchaseCounts = query
+            var purchaseCounts = await query
                 .GroupBy(p => p.MovieId)
                 .Select(g => new
                 {
@@ -35,14 +35,14 @@ namespace Infrastructure.Repositories
                 .OrderByDescending(g => g.PurchaseCount)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ToList();
+                .ToListAsync();
 
             var movieIds = purchaseCounts.Select(x => x.MovieId).ToList();
-            var movies = _movieDbContext.Movies
+            var movies = await _movieDbContext.Movies
                 .Where(m => movieIds.Contains(m.Id))
-                .ToList();
+                .ToListAsync();
 
-            var result = movies.Select(m => new MoviePurchaseCountModel()
+            var result = movies.Select(m => new MoviePurchaseCountDto()
             {
                 MovieId = m.Id,
                 MovieTitle = m.Title??string.Empty,
@@ -51,7 +51,8 @@ namespace Infrastructure.Repositories
             
             return result;
         }
-        public int GetTotalMoviesCount(DateTime? purchaseStart= null, DateTime? purchaseEnd = null, int? userId = null)
+
+        public Task<int> GetTotalMoviesCountAsync(DateTime? purchaseStart= null, DateTime? purchaseEnd = null, int? userId = null)
         {
             var query = _movieDbContext.Purchases.AsNoTracking().AsQueryable();
 
@@ -69,38 +70,43 @@ namespace Infrastructure.Repositories
 
             var purchaseCounts = query
                 .Select(p => p.MovieId)
-                .ToList().Count;
+                .Distinct()
+                .CountAsync();
             
             return purchaseCounts;
         }
-
-        public IEnumerable<MoviePurchaseModel> GetMoviesPurchasedByUser(int userId, int page, int pageSize)
+        public async Task<IEnumerable<PurchaseWithMovieInfoDto>> GetMoviesPurchasedByUserAsync(int userId, int page, int pageSize)
         {
-            var movieIds = _movieDbContext.Purchases.AsNoTracking()
+            var movieIds = await GetMovieIdsPurchasedByUserAsync(userId, page, pageSize);
+
+            var movies = await _movieDbContext.Movies.AsNoTracking()
+                .Where(m => movieIds.Contains(m.Id))
+                .ToListAsync();
+
+            var result = movies.Select(m => {
+                var p = _movieDbContext.Purchases.FirstOrDefault(p => p.UserId == userId && p.MovieId == m.Id);
+                return new PurchaseWithMovieInfoDto()
+                {
+                    MovieId = m.Id,
+                    Title = m.Title,
+                    PosterUrl = m.PosterUrl,
+                    TotalPrice = p?.TotalPrice,
+                    PurchaseNumber = p?.PurchaseNumber,
+                    PurchaseDate = p?.PurchaseDateTime
+                };
+            }).ToList();
+            return result;
+        }
+
+        public async Task<IEnumerable<int>> GetMovieIdsPurchasedByUserAsync(int userId, int page, int pageSize)
+        {
+            return await _movieDbContext.Purchases.AsNoTracking()
                 .Where(p => p.UserId == userId)
                 .Select(p => p.MovieId)
                 .Distinct()
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ToList();
-            
-            var movies = _movieDbContext.Movies.AsNoTracking()
-                .Where(m => movieIds.Contains(m.Id))
-                .ToList();
-
-            var result = movies.Select(m => {
-                    var p = _movieDbContext.Purchases.FirstOrDefault(p => p.UserId == userId && p.MovieId == m.Id);
-                    return new MoviePurchaseModel()
-                    {
-                        MovieId = m.Id,
-                        Title = m.Title,
-                        PosterUrl = m.PosterUrl,
-                        TotalPrice = p?.TotalPrice,
-                        PurchaseNumber = p?.PurchaseNumber,
-                        PurchaseDate = p?.PurchaseDateTime
-                    };
-                }).ToList();
-            return result;
+                .ToListAsync();
         }
     }
 }

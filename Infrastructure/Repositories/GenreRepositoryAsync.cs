@@ -4,9 +4,9 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Repositories
 {
-    public class GenreRepository : BaseRepository<Genre>, IGenreRepository
+    public class GenreRepositoryAsync : BaseRepositoryAsync<Genre>, IGenreRepositoryAsync
     {
-        public GenreRepository(MovieDbContext movieDbContext) : base(movieDbContext)
+        public GenreRepositoryAsync(MovieDbContext movieDbContext) : base(movieDbContext)
         {
         }
     }

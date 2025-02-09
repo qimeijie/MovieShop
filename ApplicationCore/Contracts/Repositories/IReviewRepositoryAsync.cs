@@ -2,7 +2,7 @@
 
 namespace ApplicationCore.Contracts.Repositories
 {
-    public interface ICastRepository : IRepository<Cast>
+    public interface IReviewRepositoryAsync : IRepositoryAsync<Review>
     {
     }
 }

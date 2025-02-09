@@ -1,31 +1,32 @@
 ﻿using ApplicationCore.Contracts.Repositories;
+using ApplicationCore.Dtos;
+using ApplicationCore.Models;
 using Microsoft.AspNetCore.Mvc;
-using MVC.ViewModels;
 
 namespace MVC.Controllers
 {
     public class UserController : Controller
     {
-        private readonly IPurchaseRepository _purchaseRepository;
+        private readonly IPurchaseRepositoryAsync purchaseRepository;
 
-        public UserController(IPurchaseRepository purchaseRepository)
+        public UserController(IPurchaseRepositoryAsync purchaseRepository)
         {
-            _purchaseRepository = purchaseRepository;
+            this.purchaseRepository = purchaseRepository;
         }
         private int testUserId = 48994; // 29 purhcases
         [HttpGet]
-        public IActionResult Movies(int currentPage = 1, int pageSize = 24)
+        public async Task<IActionResult> Movies(int currentPage = 1, int pageSize = 24)
         {
-            var totalMovies = _purchaseRepository.GetTotalMoviesCount(null, null, testUserId);
-            var movies = _purchaseRepository.GetMoviesPurchasedByUser(testUserId, currentPage, pageSize);
-            var model = new PurchasedMovieListViewModel()
+            var totalMovies = await purchaseRepository.GetTotalMoviesCountAsync(null, null, testUserId);
+            var movies = await purchaseRepository.GetMoviesPurchasedByUserAsync(testUserId, currentPage, pageSize);
+            var paginatedResultSet = new PaginatedResultSet<PurchaseWithMovieInfoDto>()
             {
                 CurrentPage = currentPage,
                 PageSize = pageSize,
                 TotalPages = (int)Math.Ceiling((double)totalMovies / pageSize),
-                MovieCards = movies,
+                Movies = movies,
             };
-            return View(model);
+            return View(paginatedResultSet);
         }
         [HttpGet]
         public IActionResult Favorites()

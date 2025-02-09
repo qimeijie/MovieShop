@@ -2,7 +2,7 @@
 
 namespace ApplicationCore.Contracts.Repositories
 {
-    public interface IGenreRepository : IRepository<Genre>
+    public interface IGenreRepositoryAsync : IRepositoryAsync<Genre>
     {
     }
 }

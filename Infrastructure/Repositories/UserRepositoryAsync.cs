@@ -2,11 +2,12 @@
 using ApplicationCore.Entities;
 using Infrastructure.Data;
 
+
 namespace Infrastructure.Repositories
 {
-    public class CastRepository : BaseRepository<Cast>, ICastRepository
+    public class UserRepositoryAsync : BaseRepositoryAsync<User>, IUserRepositoryAsync
     {
-        public CastRepository(MovieDbContext movieDbContext) : base(movieDbContext)
+        public UserRepositoryAsync(MovieDbContext movieDbContext) : base(movieDbContext)
         {
         }
     }

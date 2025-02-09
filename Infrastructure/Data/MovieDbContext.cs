@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
-    public class MovieDbContext(DbContextOptions options):DbContext(options)
+    public class MovieDbContext(DbContextOptions<MovieDbContext> options):DbContext(options)
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Movie> Movies { get; set; }
@@ -19,8 +19,6 @@ namespace Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<MovieGenre>().HasKey(mg => new { mg.MovieId, mg.GenreId });
             modelBuilder.Entity<MovieGenre>()
                 .HasOne(mg => mg.Genre)
@@ -84,6 +82,7 @@ namespace Infrastructure.Data
                 .HasOne(ur => ur.Role)
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

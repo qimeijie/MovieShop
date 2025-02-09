@@ -8,10 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<MovieDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("MovieDb")));
-builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-builder.Services.AddScoped<IGenreRepository, GenreRepository>();
-builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
-
+builder.Services.AddScoped<IMovieRepositoryAsync, MovieRepositoryAsync>();
+builder.Services.AddScoped<IGenreRepositoryAsync, GenreRepositoryAsync>();
+builder.Services.AddScoped<IPurchaseRepositoryAsync, PurchaseRepositoryAsync>();
+builder.Services.AddScoped<ICastRepositoryAsync, CastRepositoryAsync>();
+builder.Services.AddScoped<ITrailerRepositoryAsync, TrailerRepositoryAsync>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

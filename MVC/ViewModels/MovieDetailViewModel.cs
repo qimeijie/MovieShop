@@ -1,12 +1,13 @@
-﻿using ApplicationCore.Models;
+﻿using ApplicationCore.Dtos;
+using ApplicationCore.Entities;
 
 namespace MVC.ViewModels
 {
     public class MovieDetailViewModel
     {
         public bool IsPurchased { get; set; }
-        public MovieDetailModel Movie { get; set; } = new MovieDetailModel();
-        public IEnumerable<MovieCastModel> Casts { get; set; } = Enumerable.Empty<MovieCastModel>();
-        public IEnumerable<MovieTrailerModel> Trailers { get; set; } = Enumerable.Empty<MovieTrailerModel>();
+        public Movie Movie { get; set; } = new Movie();
+        public IEnumerable<CastWithCharacterDto> Casts { get; set; } = Enumerable.Empty<CastWithCharacterDto>();
+        public IEnumerable<Trailer> Trailers { get; set; } = Enumerable.Empty<Trailer>();
     }
 }
