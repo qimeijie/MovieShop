@@ -16,8 +16,8 @@
                     <div class="col-10 p-1">
                         <ul class="list-unstyled p-2">
                             <li class="border-bottom pb-2 mb-2">Purchased Date <span id="date" class="bg-black text-white rounded-2 p-1"></span></li>
-                            <li class="border-bottom pb-2 mb-2">Price $<span id="price" class="bg-black text-white rounded-2 p-1"></span></li>
-                            <li class="border-bottom pb-2 mb-2">Purhcase Number $<span id="id" class="bg-black text-white rounded-2 p-1"></span></li>
+                            <li class="border-bottom pb-2 mb-2">Price <span id="price" class="bg-black text-white rounded-2 p-1"></span></li>
+                            <li class="border-bottom pb-2 mb-2">Purhcase Number <span id="id" class="bg-black text-white rounded-2 p-1"></span></li>
                         </ul>
                     </div>
                 </div>  
@@ -36,7 +36,7 @@
                     <a href="#" data-bs-toggle="modal" data-bs-target="#detail"
                        data-image="@movie.PosterUrl"
                        data-date="@movie.PurchaseDate?.ToString("MMM d, yyyy")"
-                       data-price="@movie.TotalPrice"
+                       data-price="$@movie.TotalPrice"
                        data-id="@movie.PurchaseNumber">
                         <img src="@movie.PosterUrl" class="card-img-top" alt="Movie Image">
                     </a>

@@ -8,12 +8,14 @@ namespace MVC.Controllers
 {
     public class MovieController : Controller
     {
+        private readonly IGenreRepositoryAsync genreRepositoryAsync;
         private readonly IMovieRepositoryAsync movieRepository;
         private readonly ITrailerRepositoryAsync trailerRepositoryAsync;
         private readonly ICastRepositoryAsync castRepositoryAsync;
 
-        public MovieController(IMovieRepositoryAsync movieRepository, ITrailerRepositoryAsync trailerRepositoryAsync, ICastRepositoryAsync castRepositoryAsync)
+        public MovieController(IGenreRepositoryAsync genreRepositoryAsync, IMovieRepositoryAsync movieRepository, ITrailerRepositoryAsync trailerRepositoryAsync, ICastRepositoryAsync castRepositoryAsync)
         {
+            this.genreRepositoryAsync = genreRepositoryAsync;
             this.movieRepository = movieRepository;
             this.trailerRepositoryAsync = trailerRepositoryAsync;
             this.castRepositoryAsync = castRepositoryAsync;
@@ -42,10 +44,14 @@ namespace MVC.Controllers
             var movie = await movieRepository.GetMovieDetailsAsync(movieId);
             var casts = await castRepositoryAsync.GetCastByMovieIdAsync(movieId);
             var trailer = await trailerRepositoryAsync.GetTrailersByMovieIdAsync(movieId);
+            var genres = await genreRepositoryAsync.GetGenresAsync(movieId);
             var model = new MovieDetailViewModel()
             {
                 IsPurchased = false,
-                Movie = movie,
+                Rating = movie?.Reviews.Average(r => r.Rating).ToString("F2"),
+                ReleaseYear = movie?.ReleaseDate?.Year,
+                Movie = movie??new Movie(),
+                Genres = genres,
                 Casts = casts,
                 Trailers = trailer
             };
