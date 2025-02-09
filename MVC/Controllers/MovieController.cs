@@ -48,8 +48,8 @@ namespace MVC.Controllers
             var model = new MovieDetailViewModel()
             {
                 IsPurchased = false,
-                Rating = movie?.Reviews.Average(r => r.Rating).ToString("F2"),
-                ReleaseYear = movie?.ReleaseDate?.Year,
+                Rating = movie?.Reviews.Average(r => r.Rating).ToString("F2")??"No Reviews",
+                ReleaseYear = movie?.ReleaseDate?.Year.ToString()??"Not Available",
                 Movie = movie??new Movie(),
                 Genres = genres,
                 Casts = casts,
